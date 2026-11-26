@@ -1,0 +1,17 @@
+[project]
+name = "acme-billing-api"
+version = "0.2.0"
+dependencies = [
+    "fastapi>=0.110.0",
+    "pydantic>=2.6.0",
+    "uvicorn>=0.29.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0", "ruff>=0.4.0"]
+
+[project.scripts]
+acme-billing = "src.app:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

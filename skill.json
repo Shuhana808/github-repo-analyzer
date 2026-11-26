@@ -1,0 +1,145 @@
+{
+  "$schema": "https://agentplace.sh/schemas/skill-1.0.json",
+  "name": "github-repo-analyzer",
+  "display_name": "GitHub Repository Analyzer",
+  "version": "1.0.0",
+  "description": "Read-only repository analysis: architecture map, dependency graph with cycle and fan-in/fan-out insights, manifest dependency extraction, repo health signals, and heuristic code-review findings. Accepts a local path, GitHub/Git URL (including /tree/<ref>/<subdir> branch and monorepo links), or owner/repo[@ref] shorthand. Produces report.md, compact summary.json, full report.json, and an architecture.mmd Mermaid graph.",
+  "short_description": "Read-only architecture, dependency, and heuristic code-review report for any repo.",
+  "author": {
+    "name": "Shuhana",
+    "handle": "Shuhana808",
+    "email": "shuhana.azmin@gmail.com",
+    "url": "https://github.com/Shuhana808"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/Shuhana808/github-repo-analyzer",
+  "repository": "https://github.com/Shuhana808/github-repo-analyzer",
+  "issues": "https://github.com/Shuhana808/github-repo-analyzer/issues",
+  "changelog": "https://github.com/Shuhana808/github-repo-analyzer/blob/main/CHANGELOG.md",
+
+  "entry": "SKILL.md",
+  "category": "developer-tools",
+  "tags": [
+    "code-review",
+    "architecture",
+    "dependency-analysis",
+    "repository-analysis",
+    "graph-analysis",
+    "mermaid",
+    "developer-tools"
+  ],
+  "keywords": [
+    "repository architecture",
+    "dependency graph",
+    "circular dependencies",
+    "fan-in fan-out analysis",
+    "entry-point detection",
+    "manifest dependencies",
+    "code review automation",
+    "heuristic findings",
+    "github",
+    "read-only analysis"
+  ],
+
+  "disclaimers": [
+    "Findings are unverified heuristic pattern/AST matches, not confirmed vulnerabilities or bugs. Verify each item in context before acting.",
+    "No repo code, tests, package managers, static analyzers (mypy, ESLint, Semgrep, CodeQL), CVE scanners, or taint analysis are executed. Dependency CVEs are not reported.",
+    "Import resolution is heuristic: Python uses ast.parse; JS/TS (with heuristic tsconfig.json/jsconfig.json baseUrl and paths alias resolution), Go, Rust, and Java use conservative regex. Dynamic imports, complex workspace overrides, Go multi-file packages, and Rust macros can be missed.",
+    "\"Unreachable from entry points\" does not mean dead code. Tests, plugins, library APIs, and framework-discovered modules frequently appear in this bucket.",
+    "Dependency analysis is manifest-based. Transitive dependencies and lockfile resolution are not included."
+  ],
+
+  "pricing": {
+    "model": "one-time",
+    "amount_usd": 24.00,
+    "currency": "USD",
+    "trial": {
+      "available": true,
+      "type": "limited-scope",
+      "description": "Free run against public repos up to 500 files. Full analysis requires purchase."
+    }
+  },
+
+  "requirements": {
+    "runtime": "openclaw",
+    "min_openclaw_version": "0.5.0",
+    "python": ">=3.10",
+    "system": ["git"],
+    "optional": [],
+    "network": ["github.com"]
+  },
+
+  "permissions": {
+    "exec": ["git", "python3"],
+    "filesystem": {
+      "read": ["<repo-path>", "<output-dir>", "/tmp/repo-analyzer"],
+      "write": ["<output-dir>", "/tmp/repo-analyzer"],
+      "never": ["<repo-path>"]
+    },
+    "network": {
+      "hosts": ["github.com"],
+      "purpose": "shallow git clone/refresh of the target repository when the input is a URL or owner/repo shorthand; local-path inputs use no network"
+    }
+  },
+
+  "tools": {
+    "clone": "scripts/clone_repo.py",
+    "analyze": "scripts/analyze_repo.py"
+  },
+
+  "references": [
+    "references/severity-standards.md",
+    "references/report-template.md",
+    "references/sample-report.md"
+  ],
+
+  "preview": {
+    "sample_report": "references/sample-report.md",
+    "sample_report_source": "examples/sample_project",
+    "demo_command": "Analyze https://github.com/pallets/flask"
+  },
+
+  "highlights": [
+    "Architecture map: languages, manifests, entry points, module counts, and internal dependency edges.",
+    "Mermaid dependency graph (architecture.mmd) with entry points, cycle participants, hub modules, high fan-out modules, and isolated modules color-coded.",
+    "Graph metrics & insights: full-repo and production-only subgraph metrics (SCCs, cycles, fan-in/fan-out, reachability), plus high-churn production hubs on non-shallow git repos.",
+    "Manifest dependency extraction for pyproject.toml, requirements.txt, package.json, go.mod, Cargo.toml, pom.xml, build.gradle(.kts), Gemfile, composer.json, pubspec.yaml, and .csproj/.fsproj, plus OpenAPI/GraphQL/Protobuf/Next.js detection.",
+    "Repo health & onboarding signals: deterministic reading order, git HEAD & churn hotspots, env var surface (key names only), CI/Makefile/justfile/Taskfile/docker-compose commands, README/LICENSE, largest files, and read-only test detection.",
+    "AST-based Python sink detection, context-aware JS/TS/Go/SQL heuristics, scope separation (production vs test/example/docs), auto-redacted secret patterns, and guided read-only Context Triage with finding-driven follow-ups in SKILL.md.",
+    "Strictly read-only on the repository: never executes repo code or tests; writes only to WORK_ROOT and the output directory.",
+    "Accepts a local path, GitHub/Git URL (including /tree/<ref>/<subdir>, /blob/<ref>/<path>, and /commit/<sha>), or owner/repo[@ref] shorthand with --ref/--subdir flags, compact summary.json output, and environment overrides for WORK_ROOT, MAX_SIZE_MB, GIT_TIMEOUT, GITHUB_TOKEN, and MAX_FILES."
+  ],
+
+  "audience": {
+    "primary": "Developers evaluating an unfamiliar codebase before contributing, forking, or auditing.",
+    "secondary": "Engineering teams doing a first-pass architectural review or onboarding audit."
+  },
+
+  "support": {
+    "email": "shuhana.azmin@gmail.com",
+    "issues": "https://github.com/Shuhana808/github-repo-analyzer/issues",
+    "docs": "https://github.com/Shuhana808/github-repo-analyzer#readme",
+    "response_time_hours": 48
+  },
+
+  "metadata": {
+    "created_at": "2026-11-15",
+    "language": "en",
+    "analysis_limitations": [
+      "Python imports use ast.parse; JS/TS, Go, Rust, and Java imports use conservative regex patterns. Compiler-grade resolution is not performed.",
+      "No repo code or tests are executed; no static analysis (Semgrep, CodeQL, mypy, ESLint, ruff), no CVE scan (pip-audit, npm audit, OSV), and no taint analysis is run.",
+      "Dependency analysis is manifest-based; transitive dependencies and lockfile resolution are not included.",
+      "Entry-point detection is heuristic: conventional filenames, __main__ guards, main functions, package.json metadata/scripts, and pyproject.toml scripts.",
+      "Unreachability from detected entry points is not equivalent to dead code. Tests, plugins, library APIs, and framework-discovered modules frequently appear unreachable.",
+      "Bounded analysis: MAX_BYTES = 1 MB/file, MAX_ARCHITECTURE_BYTES = 32 MB/repo, MAX_FILES = 20 000 (configurable); findings truncated at 2 000. Truncations and skipped counts are disclosed in report.md and report.json.",
+      "Generated, vendored, binary, oversized, and sensitive files (.env, .env.*, private keys, credential files) are skipped without being read."
+    ],
+    "tested_repos": [
+      "https://github.com/pallets/flask",
+      "https://github.com/expressjs/express",
+      "https://github.com/gin-gonic/gin",
+      "https://github.com/pallets/click"
+    ],
+    "changelog_url": "https://github.com/Shuhana808/github-repo-analyzer/blob/main/CHANGELOG.md"
+  }
+}
