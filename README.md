@@ -159,4 +159,8 @@ python3 -m unittest discover -s tests -v
 
 Issues, PRs, and false-positive reports (with rule ID, code snippet, and expected behavior) are welcome.
 
-Licensed under the MIT License. See [`LICENSE`](LICENSE).
+Licensed under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) (`PolyForm-Noncommercial-1.0.0`). See [`LICENSE`](LICENSE).
+
+Free for personal, educational, and noncommercial use. Commercial use requires a separate commercial license—contact `shuhana.azmin@gmail.com` or purchase through an authorized marketplace.
+
+Required Notice: Copyright 2026 Shuhana (https://github.com/Shuhana808/github-repo-analyzer)
